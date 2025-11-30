@@ -16,8 +16,17 @@ from libnl.socket_ import nl_socket_add_membership, nl_socket_alloc, nl_socket_d
 
 NL_CMD_RECOVERY_MSG = 27
 
-PATH_TO_DRIVER = "/home/pi/nrc_pkg/sw/driver/nrc.ko"
-PATH_TO_CONFIG = "/home/pi/nrc_pkg/script/conf/{}/"
+#get user name
+USER_NAME = os.getenv("USER")
+#or get the user name by regex from home path
+#home_path = os.path.expanduser("~")
+#match = re.search(r'/home/([^/]+)', home_path)
+#if match:
+#    USER_NAME = match.group(1)
+
+
+PATH_TO_DRIVER = "/home/"+USER_NAME+"/nrc_pkg/sw/driver/nrc.ko"
+PATH_TO_CONFIG = "/home/"+USER_NAME+"/nrc_pkg/script/conf/{}/"
 FIRMWARE = "uni_s1g.bin"
 
 class Recovery:
