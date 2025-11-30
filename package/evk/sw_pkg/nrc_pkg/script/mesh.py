@@ -4,6 +4,22 @@ import subprocess
 from start import check
 from mesh_add_peer import addPeer, checkPeer
 
+
+#get user name
+USER_NAME = os.getenv("USER")
+#or get the user name by regex from home path
+#home_path = os.path.expanduser("~")
+#match = re.search(r'/home/([^/]+)', home_path)
+#if match:
+#    USER_NAME = match.group(1)
+
+
+
+script_path = "/home/" + USER_NAME + "/nrc_pkg/script/"
+print("script_path: " + script_path)
+
+
+
 def isInterface(interface):
     if os.path.isdir("/sys/class/net/" + interface):
         return True
@@ -83,16 +99,16 @@ def run_mp(interface, country, security, debug, peermac, ip, batman):
     print("[7] Start wpa_supplicant on " + interface)
     if security == 'OPEN':
         if peermac != 0:
-            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
+            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
         else:
-            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/mp_halow_open.conf " + debug + " &")
+            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/"+ USER_NAME +"/nrc_pkg/script/conf/" + country + "/mp_halow_open.conf " + debug + " &")
     elif security == 'WPA3-SAE':
         if peermac != 0:
-            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
+            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/'+ USER_NAME +'/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
         else:
-            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/mp_halow_sae.conf " + debug + " &")
+            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/"+ USER_NAME +"/nrc_pkg/script/conf/" + country + "/mp_halow_sae.conf " + debug + " &")
     time.sleep(1)
 
     if batman != 0:
@@ -156,16 +172,16 @@ def run_mpp(interface, country, security, debug, peermac, ip, batman):
     print("[7] Start wpa_supplicant on " + interface)
     if security == 'OPEN':
         if peermac != 0:
-            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
+            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
         else:
-            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/mp_halow_open.conf " + debug + " &")
+            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/mp_halow_open.conf " + debug + " &")
     elif security == 'WPA3-SAE':
         if peermac != 0:
-            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
+            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
         else:
-            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/mp_halow_sae.conf " + debug + " &")
+            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/mp_halow_sae.conf " + debug + " &")
     time.sleep(1)
 
     if ip != 'nodhcp':
@@ -245,16 +261,16 @@ def run_map(wlan, mesh, country, security, debug, peermac, ip, batman):
     print("[7] Start wpa_supplicant on " + mesh)
     if security == 'OPEN':
         if peermac != 0:
-            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
+            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
         else:
-            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
-        os.system("sudo wpa_supplicant -i" + mesh + " -c /home/pi/nrc_pkg/script/conf/" + country + "/mp_halow_open.conf " + debug + " &")
+            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_open.conf ')
+        os.system("sudo wpa_supplicant -i" + mesh + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/mp_halow_open.conf " + debug + " &")
     else:
         if peermac != 0:
-            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
+            os.system("sed -i " + '"s/#no_auto_peer=1/no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
         else:
-            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/pi/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
-        os.system("sudo wpa_supplicant -i" + mesh + " -c /home/pi/nrc_pkg/script/conf/" + country + "/mp_halow_sae.conf " + debug + " &")
+            os.system("sed -i " + '"s/ no_auto_peer=1/ #no_auto_peer=1/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/mp_halow_sae.conf ')
+        os.system("sudo wpa_supplicant -i" + mesh + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/mp_halow_sae.conf " + debug + " &")
     time.sleep(1)
 
     if batman != 0:
@@ -282,20 +298,20 @@ def run_map(wlan, mesh, country, security, debug, peermac, ip, batman):
 
     print("[8] Start hostapd on " + wlan)
     if security == 'OPEN':
-        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/pi/nrc_pkg/script/conf/' + country + '/map_halow_open.conf ')
-        os.system("sudo hostapd /home/pi/nrc_pkg/script/conf/" + country + "/map_halow_open.conf " + debug +" &")
+        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/map_halow_open.conf ')
+        os.system("sudo hostapd /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/map_halow_open.conf " + debug +" &")
     elif security == 'WPA2-PSK':
-        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/pi/nrc_pkg/script/conf/' + country + '/map_halow_wpa2.conf ')
-        os.system("sudo hostapd /home/pi/nrc_pkg/script/conf/" + country + "/map_halow_wpa2.conf " + debug + "  &")
+        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/map_halow_wpa2.conf ')
+        os.system("sudo hostapd /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/map_halow_wpa2.conf " + debug + "  &")
     elif security == 'WPA3-OWE':
-        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/pi/nrc_pkg/script/conf/' + country + '/map_halow_owe.conf ')
-        os.system("sudo hostapd /home/pi/nrc_pkg/script/conf/" + country + "/map_halow_owe.conf " + debug + "  &")
+        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/map_halow_owe.conf ')
+        os.system("sudo hostapd /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/map_halow_owe.conf " + debug + "  &")
     elif security == 'WPA3-SAE':
-        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/pi/nrc_pkg/script/conf/' + country + '/map_halow_sae.conf ')
-        os.system("sudo hostapd /home/pi/nrc_pkg/script/conf/" + country + "/map_halow_sae.conf " + debug + "  &")
+        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/map_halow_sae.conf ')
+        os.system("sudo hostapd /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/map_halow_sae.conf " + debug + "  &")
     elif security == 'WPA-PBC':
-        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/pi/nrc_pkg/script/conf/' + country + '/map_halow_pbc.conf ')
-        os.system("sudo hostapd /home/pi/nrc_pkg/script/conf/" + country + "/map_halow_pbc.conf " + debug + "  &")
+        os.system("sed -i " + '"4s/.*/interface=' + wlan + '/g"  /home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + '/map_halow_pbc.conf ')
+        os.system("sudo hostapd /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/map_halow_pbc.conf " + debug + "  &")
         time.sleep(1)
         os.system("sudo hostapd_cli wps_pbc")
     time.sleep(1)

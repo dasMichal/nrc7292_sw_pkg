@@ -1,9 +1,23 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import sys, os, time, subprocess, re
 import threading
-from mesh import *
-script_path = "/home/pi/nrc_pkg/script/"
+from mesh import *#
+
+#get user name
+USER_NAME = os.getenv("USER")
+#or get the user name by regex from home path
+#home_path = os.path.expanduser("~")
+#match = re.search(r'/home/([^/]+)', home_path)
+#if match:
+#    USER_NAME = match.group(1)
+
+
+
+script_path = "/home/" + USER_NAME + "/nrc_pkg/script/"
+print("script_path: " + script_path)
+
+#script_path = "/home/pi/nrc_pkg/script/"
 
 # Default Configuration (you can change value you want here)
 ##################################################################################
@@ -383,8 +397,8 @@ def argv_print():
     print("------------------------------")
 
 def copyConf():
-    os.system("sudo /home/pi/nrc_pkg/sw/firmware/copy " + str(model) + " " + strBDName())
-    os.system("/home/pi/nrc_pkg/script/conf/etc/ip_config.sh " + strSTA() + " " +  str(relay_type) + " " + str(static_ip) + " " + str(batman))
+    os.system("sudo /home/" + USER_NAME + "/nrc_pkg/sw/firmware/copy " + str(model) + " " + strBDName())
+    os.system("/home/" + USER_NAME + "/nrc_pkg/script/conf/etc/ip_config.sh " + strSTA() + " " +  str(relay_type) + " " + str(static_ip) + " " + str(batman))
 
 def startNAT():
     os.system('sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"')
@@ -690,7 +704,7 @@ def setModuleParam():
 def run_common():
     if int(max_cpuclock) == 1:
         print("[*] Set Max CPU Clock on RPi")
-        os.system("sudo /home/pi/nrc_pkg/script/conf/etc/clock_config.sh")
+        os.system("sudo /home/" + USER_NAME + "/nrc_pkg/script/conf/etc/clock_config.sh")
 
     print("[0] Clear")
     os.system("sudo hostapd_cli disable 2>/dev/null")
@@ -716,8 +730,8 @@ def run_common():
     os.system("sudo iw reg set " + strOriCountry())
 
     print("[3] Loading module")
-    print("sudo insmod /home/pi/nrc_pkg/sw/driver/nrc.ko " + insmod_arg)
-    os.system("sudo insmod /home/pi/nrc_pkg/sw/driver/nrc.ko " + insmod_arg + "")
+    print("sudo insmod /home/" + USER_NAME + "/nrc_pkg/sw/driver/nrc.ko " + insmod_arg)
+    os.system("sudo insmod /home/" + USER_NAME + "/nrc_pkg/sw/driver/nrc.ko " + insmod_arg + "")
 
     if int(spi_polling_interval) <= 0:
         time.sleep(5)
@@ -735,14 +749,14 @@ def run_common():
         sys.exit()
 
     print("[4] Set Maximum TX Power")
-    os.system('/home/pi/nrc_pkg/script/cli_app set txpwr limit ' + str(max_txpwr))
+    os.system('/home/'+ USER_NAME +'/nrc_pkg/script/cli_app set txpwr limit ' + str(max_txpwr))
     if strSTA() != 'SNIFFER':
         print("[*] Transmission Power Control(TPC) is activated")
         os.system('sudo iw phy nrc80211 set txpower limit ' + str(int(max_txpwr) * 100))
 
     print("[5] Set guard interval: " + guard_int)
     if str(guard_int) != 'auto':
-        os.system('/home/pi/nrc_pkg/script/cli_app set gi ' + guard_int)
+        os.system('/home/'+ USER_NAME +'/nrc_pkg/script/cli_app set gi ' + guard_int)
 
     print("[*] Start DHCPCD and DNSMASQ")
     startDHCPCD()
@@ -775,15 +789,15 @@ def run_sta(interface):
 
     print("[6] Start wpa_supplicant on " + interface)
     if strSecurity() == 'OPEN':
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/sta_halow_open.conf " + bridge + debug + " &")
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/sta_halow_open.conf " + bridge + debug + " &")
     elif strSecurity() == 'WPA2-PSK':
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/sta_halow_wpa2.conf " + bridge + debug + " &")
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/sta_halow_wpa2.conf " + bridge + debug + " &")
     elif strSecurity() == 'WPA3-OWE':
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/sta_halow_owe.conf " + bridge + debug + " &")
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/sta_halow_owe.conf " + bridge + debug + " &")
     elif strSecurity() == 'WPA3-SAE':
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/sta_halow_sae.conf " + bridge + debug + " &")
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/sta_halow_sae.conf " + bridge + debug + " &")
     elif strSecurity() == 'WPA-PBC':
-        os.system("sudo wpa_supplicant -i" + interface + " -c /home/pi/nrc_pkg/script/conf/" + country + "/sta_halow_pbc.conf " + bridge + debug + " &")
+        os.system("sudo wpa_supplicant -i" + interface + " -c /home/" + USER_NAME + "/nrc_pkg/script/conf/" + country + "/sta_halow_pbc.conf " + bridge + debug + " &")
         time.sleep(1)
         os.system("sudo wpa_cli wps_pbc")
     time.sleep(3)
@@ -871,7 +885,7 @@ def run_ap(interface):
             time.sleep(1)
             os.system("sudo hostapd_cli wps_pbc")
     else:
-        launch_hostapd( interface, '/home/pi/nrc_pkg/script/conf/' + country + conf_file, country, debug, channel )
+        launch_hostapd( interface, '/home/' + USER_NAME + '/nrc_pkg/script/conf/' + country + conf_file, country, debug, channel )
         if strSecurity() == 'WPA-PBC':            
             time.sleep(1)
             os.system("sudo hostapd_cli wps_pbc")
