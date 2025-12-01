@@ -4,7 +4,18 @@ import os
 import time
 from mesh import *
 
-script_path = "/home/pi/nrc_pkg/script/"
+#get user name
+USER_NAME = os.getenv("USER")
+#or get the user name by regex from home path
+#home_path = os.path.expanduser("~")
+#match = re.search(r'/home/([^/]+)', home_path)
+#if match:
+#    USER_NAME = match.group(1)
+
+
+
+script_path = "/home/" + USER_NAME + "/nrc_pkg/script/"
+print("script_path: " + script_path)
 
 def stopNAT():
     os.system('sudo sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"')

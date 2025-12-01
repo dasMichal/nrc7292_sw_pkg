@@ -12,7 +12,7 @@ USER_NAME = os.getenv("USER")
 #if match:
 #    USER_NAME = match.group(1)
 
-
+ 
 
 script_path = "/home/" + USER_NAME + "/nrc_pkg/script/"
 print("script_path: " + script_path)

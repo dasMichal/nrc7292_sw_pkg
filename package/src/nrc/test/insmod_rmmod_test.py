@@ -30,19 +30,31 @@ curr_test_cnt = 0
 start_time = 0
 state = STATE_IDLE
 
+#get user name
+USER_NAME = os.getenv("USER")
+#or get the user name by regex from home path
+#home_path = os.path.expanduser("~")
+#match = re.search(r'/home/([^/]+)', home_path)
+#if match:
+#    USER_NAME = match.group(1)
+
+
+
+
+
 def run_ap():
 	print "[run ap]"
 	os.system("sudo killall -9 hostapd")
 	os.system("sudo rmmod nrc")
-	os.system("sudo insmod /home/pi/nrc/nrc.ko hifspeed=16000000 power_save=1 fw_name=nrc7292_cspi.bin")
+	os.system("sudo insmod /home/"+USER_NAME+"/nrc/nrc.ko hifspeed=16000000 power_save=1 fw_name=nrc7292_cspi.bin")
 	time.sleep(5)
-	os.system('python /home/pi/nrc/test/netlink/shell.py run --cmd="phy rxgain 50"')
+	os.system('python /home/'+USER_NAME+'/nrc/test/netlink/shell.py run --cmd="phy rxgain 50"')
 	time.sleep(1)
-	os.system('python /home/pi/nrc/test/netlink/shell.py run --cmd="phy txgain 1"')
+	os.system('python /home/'+USER_NAME+'/nrc/test/netlink/shell.py run --cmd="phy txgain 1"')
 	time.sleep(1)
-	os.system('python /home/pi/nrc/test/netlink/shell.py run --cmd="set capa_1m off on"')
+	os.system('python /home/'+USER_NAME+'/nrc/test/netlink/shell.py run --cmd="set capa_1m off on"')
 	time.sleep(1)
-	os.system("sudo hostapd /home/pi/nrc/test/ap_halow_ins_rm_test.conf &")
+	os.system("sudo hostapd /home/"+USER_NAME+"/nrc/test/ap_halow_ins_rm_test.conf &")
 	time.sleep(3)
 
 def run_sta():
@@ -54,15 +66,15 @@ def run_sta():
 	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'sudo killall -9 wpa_supplicant'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'sudo rmmod nrc'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	time.sleep(1)
-	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'sudo insmod /home/pi/nrc/nrc.ko power_save=0 hifspeed=16000000 fw_name=nrc7292_cspi.bin'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
+	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'sudo insmod /home/"+USER_NAME+"/nrc/nrc.ko power_save=0 hifspeed=16000000 fw_name=nrc7292_cspi.bin'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	time.sleep(5)
-	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'python /home/pi/nrc/test/netlink/shell.py run --cmd=\"phy rxgain 50\"'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
+	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'python /home/"+USER_NAME+"/nrc/test/netlink/shell.py run --cmd=\"phy rxgain 50\"'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	time.sleep(1)
-	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'python /home/pi/nrc/test/netlink/shell.py run --cmd=\"phy txgain 1\"'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
+	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'python /home/"+USER_NAME+"/nrc/test/netlink/shell.py run --cmd=\"phy txgain 1\"'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	time.sleep(1)
-	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'python /home/pi/nrc/test/netlink/shell.py run --cmd=\"set capa_1m off on\"'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
+	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'python /home/"+USER_NAME+"/nrc/test/netlink/shell.py run --cmd=\"set capa_1m off on\"'".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	time.sleep(1)
-	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'sudo wpa_supplicant -Dnl80211 -iwlan0 -c /home/pi/nrc/test/sta_halow_ins_rm_test.conf &' &".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
+	os.system("sshpass -p{0} ssh -o StrictHostKeyChecking=no {1}@{2} 'sudo wpa_supplicant -Dnl80211 -iwlan0 -c /home/"+USER_NAME+"/nrc/test/sta_halow_ins_rm_test.conf &' &".format(STA_HOST_PW, STA_HOST_NAME, STA_ETH_IP))
 	start_time = int(round(time.time()*1000))
 	curr_test_cnt += 1
 	
